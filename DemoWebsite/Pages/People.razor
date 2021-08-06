@@ -1,13 +1,12 @@
 ﻿@page "/people"
 
-@using DataLibrary
+@using DemoWebsite.Data
 @using DemoWebsite.Models
 @using Microsoft.Extensions.Configuration
 @inject IDataAccess _data
 @inject IConfiguration _config
 
 <h3>People</h3>
-
 <button class="btn btn-primary" @onclick="InsertData">Insert</button>
 <button class="btn btn-warning" @onclick="UpdateData">Update</button>
 <button class="btn btn-danger" @onclick="DeleteData">Delete</button>
