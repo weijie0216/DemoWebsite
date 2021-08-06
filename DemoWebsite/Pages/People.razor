@@ -1,0 +1,65 @@
+﻿@page "/people"
+
+@using DataLibrary
+@using DemoWebsite.Models
+@using Microsoft.Extensions.Configuration
+@inject IDataAccess _data
+@inject IConfiguration _config
+
+<h3>People</h3>
+
+<button class="btn btn-primary" @onclick="InsertData">Insert</button>
+<button class="btn btn-warning" @onclick="UpdateData">Update</button>
+<button class="btn btn-danger" @onclick="DeleteData">Delete</button>
+
+@if (people == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    @foreach (var p in people)
+    {
+        <p>
+            @p.name @p.category
+        </p>
+    }
+}
+
+@code {
+    List<PersonModel> people;
+
+    private async Task InsertData()
+    {
+        string sql = "insert into person (name, category) values (@name, @category)";
+
+        await _data.SaveData(sql, new { name = "Abu", category = "Staff"}, _config.GetConnectionString("default"));
+        
+        await OnInitializedAsync(); 
+    }
+
+    private async Task UpdateData()
+    {
+        string sql = "update person set name = @name where category = @category";
+
+        await _data.SaveData(sql, new { name = "Chris", category = "Intern"}, _config.GetConnectionString("default"));
+
+        await OnInitializedAsync();    
+    }
+
+    private async Task DeleteData()
+    {
+        string sql = "delete from person where category = @category";
+
+        await _data.SaveData(sql, new { category = "Intern"}, _config.GetConnectionString("default"));
+
+        await OnInitializedAsync();    
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        string sql = "select * from person";
+
+        people = await _data.LoadData<PersonModel, dynamic>(sql, new { }, _config.GetConnectionString("default"));
+    }
+}
