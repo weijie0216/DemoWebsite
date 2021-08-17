@@ -7,50 +7,87 @@
 @inject IConfiguration _config
 
 <h3>People</h3>
-<button class="btn btn-primary" @onclick="InsertData">Insert</button>
-<button class="btn btn-warning" @onclick="UpdateData">Update</button>
-<button class="btn btn-danger" @onclick="DeleteData">Delete</button>
 
-@if (people == null)
+<br />
+
+<h4>Insert New Person</h4>
+<EditForm Model=@newPerson OnValidSubmit="@InsertData"> 
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+
+    <label>
+        Name:
+        <InputText id="name" @bind-Value="newPerson.name" />
+    </label>
+    <label>
+        Category:
+        <InputText id="category" @bind-Value="newPerson.category" />
+    </label>
+
+    <button class="btn btn-primary" type="submit">Insert</button>
+</EditForm>
+
+<br />
+
+<h4>Show All Person</h4>
+
+@if (people is null)
 {
     <p><em>Loading...</em></p>
 }
 else
 {
-    @foreach (var p in people)
-    {
-        <p>
-            @p.name @p.category
-        </p>
-    }
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Category</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var person in people)
+            {
+                <tr>
+                    <td><input type="text" id="editName" @bind="person.name" /></td>
+                    <td><input type="text" id="editCategory" @bind="person.category" /></td>
+                    <td><button class="btn btn-warning" type="button" @onclick="() => UpdateData(person)">Update</button></td>
+                    <td><button class="btn btn-danger" type="button" @onclick="() => DeleteData(person.ID)">Delete</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
 }
 
 @code {
-    List<PersonModel> people;
+    private List<PersonModel> people;
+    private DisplayPersonModel newPerson = new DisplayPersonModel();
+
 
     private async Task InsertData()
     {
         string sql = "insert into person (name, category) values (@name, @category)";
 
-        await _data.SaveData(sql, new { name = "Abu", category = "Staff"}, _config.GetConnectionString("default"));
+        await _data.SaveData(sql, new { name = newPerson.name, category = newPerson.category}, _config.GetConnectionString("default"));
         
-        await OnInitializedAsync(); 
+        await OnInitializedAsync();
+
+        newPerson = new DisplayPersonModel();
     }
 
-    private async Task UpdateData()
+    private async Task UpdateData(PersonModel person)
     {
-        string sql = "update person set name = @name where category = @category";
+        string sql = "update person set name = @name, category = @category where id = @id";
 
-        await _data.SaveData(sql, new { name = "Chris", category = "Intern"}, _config.GetConnectionString("default"));
+        await _data.SaveData(sql, new { name = person.name, category = person.category, id = person.ID}, _config.GetConnectionString("default"));
 
         await OnInitializedAsync();    
     }
 
-    private async Task DeleteData()
+    private async Task DeleteData(int personID)
     {
-        string sql = "delete from person where category = @category";
+        string sql = "delete from person where id = @id";
 
-        await _data.SaveData(sql, new { category = "Intern"}, _config.GetConnectionString("default"));
+        await _data.SaveData(sql, new { id = personID}, _config.GetConnectionString("default"));
 
         await OnInitializedAsync();    
     }
