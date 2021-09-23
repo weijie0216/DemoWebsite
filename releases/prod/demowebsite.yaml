@@ -1,0 +1,16 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: demowebsite
+  namespace: dotnet-project
+spec:
+  releaseName: demowebsite-prod
+  chart:
+    git: https://github.com/weijie0216/DemoWebsite.git
+    path: charts/demowebsite
+    ref: master
+  values:
+    image:
+      repository: weijie0216/DemoWebsite
+      tag: latest
+    replicaCount: 1
