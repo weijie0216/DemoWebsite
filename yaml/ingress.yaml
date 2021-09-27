@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: nginxdemoapp-web-ingress
+  namespace: dotnet-project
+  annotations:
+    kubernetes.io/ingress.class: nginx
+spec:
+  rules:
+  - host:  frontend.40.119.205.57.nip.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: demowebsite
+            port:
+              number: 80
