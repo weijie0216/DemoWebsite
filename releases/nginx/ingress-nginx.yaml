@@ -1,0 +1,16 @@
+apiVersion: helm.fluxcd.io/v1
+kind: HelmRelease
+metadata:
+  name: ingress-nginx
+  namespace: ingress
+spec:
+  releaseName: nginx-ingress
+  chart:
+    git: https://github.com/weijie0216/DemoWebsite.git
+    path: charts/ingress-nginx
+    ref: master
+  values:
+    image:
+      repository: k8s.gcr.io/ingress-nginx/controller
+      tag: "v1.0.1"
+    replicaCount: 1
