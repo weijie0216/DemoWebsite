@@ -1,15 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "demowebsite.fullname" . }}
+  name: {{ .Values.serviceName }}
+  namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "demowebsite.labels" . | nindent 4 }}
+    name: {{.Release.Name}}
 spec:
-  type: {{ .Values.service.type }}
+  type: LoadBalancer
   ports:
-    - port: {{ .Values.service.port }}
-      targetPort: http
-      protocol: TCP
-      name: http
+  - port: 80
   selector:
-    {{- include "demowebsite.selectorLabels" . | nindent 4 }}
+    app: {{.Release.Name}}
