@@ -16,5 +16,3 @@ jobs:
     - uses: actions/checkout@v3
     - name: Build the Docker image
       run: docker build . --file DemoWebsite/Dockerfile --tag demowebsite:$GITHUB_RUN_ID
-    - name: Run the Docker image
-      run: docker run --name demowebsite -p 1337:80 demowebsite:$GITHUB_RUN_ID
