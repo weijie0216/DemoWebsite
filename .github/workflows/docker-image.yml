@@ -5,6 +5,9 @@ on:
     branches: [ master ]
   pull_request:
     branches: [ master ]
+    
+env:
+  TAG_NUMBER: (date +%s)
 
 jobs:
 
@@ -15,6 +18,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
-      run: docker build . --file DemoWebsite/Dockerfile --tag demowebsite:$(date +%s)
+      run: docker build . --file DemoWebsite/Dockerfile --tag demowebsite:$TAG_NUMBER
     - name: Run the Docker image
-      run: docker run --name demowebsite -p 1337:80 demowebsite:$(date +%s)
+      run: docker run --name demowebsite -p 1337:80 demowebsite:$TAG_NUMBER
