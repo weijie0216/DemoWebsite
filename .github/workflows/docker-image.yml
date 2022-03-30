@@ -7,7 +7,7 @@ on:
     branches: [ master ]
     
 env:
-  TAG_NUMBER: (date +%s)
+  TAG_NUMBER: date +%s
 
 jobs:
 
